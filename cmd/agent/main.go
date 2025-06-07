@@ -63,6 +63,14 @@ func main() {
 		}
 	}()
 
+	go func() {
+		err := detectors.MonitorCronJob(alerts)
+		fmt.Println("Error: ", err)
+		if err != nil {
+			log.Fatal()
+		}
+	}()
+
 	for alerting := range alerts {
 		log.Println("[ALERT]", alerting)
 
@@ -73,8 +81,7 @@ func main() {
 			} else {
 				log.Println("[AI]", analysis)
 			}
-			enriched := fmt.Sprintf("%s\n\nAI Insight:\n%s", alerting, analysis)
-			alert.SendAIAnalysis(enriched)
+			alert.SendAIAnalysis(analysis)
 		}
 	}
 }
