@@ -19,7 +19,7 @@ type Alert struct {
 }
 
 type AlertAI struct {
-	Message string `json:"message"`
+	AiAnalyst string `json:"ai_analyst"`
 }
 
 var alertURL string
@@ -48,13 +48,11 @@ func SendSSHServiceAlert(log string, description string, alert_type string, seve
 		return
 	}
 	defer resp.Body.Close()
-
-	fmt.Println("[+] Alert sent. Status", resp.Status)
 }
 
 func SendAIAnalysis(message string) {
 	payload := AlertAI{
-		Message: message,
+		AiAnalyst: message,
 	}
 
 	dataSend, _ := json.Marshal(payload)
@@ -70,7 +68,4 @@ func SendAIAnalysis(message string) {
 		fmt.Println("[!] Error sending alert", err)
 	}
 	defer resp.Body.Close()
-
-	fmt.Println("[+] Analyst sent. Status", resp.Status)
-
 }

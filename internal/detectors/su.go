@@ -38,15 +38,12 @@ func MonitorSUElevation(alerts chan<- string) error {
 		line = strings.ToLower(line)
 
 		if strings.Contains(line, "su:") {
-			var usernameTo string
-			var usernameFrom string
-			userTo := &usernameTo
-			userFrom := &usernameFrom
+
 			matches := detectSuElevationRegex.FindStringSubmatch(line)
 			if len(matches) > 1 {
-				*userTo = matches[1]
-				*userFrom = matches[2]
-				msg := fmt.Sprintf("[!] User '%s' attempted to switch to '%s' using su", *userFrom, *userTo)
+				userTo := matches[1]
+				userFrom := matches[2]
+				msg := fmt.Sprintf("[!] User '%s' attempted to switch to '%s' using su", userFrom, userTo)
 				alerts <- msg
 				alert.SendSSHServiceAlert(line, msg, "user_elevation", "medium")
 			}

@@ -8,10 +8,11 @@ import (
 	"sentra/internal/alert"
 	"strings"
 	"sync"
+	"time"
 )
 
 var muCron sync.Mutex
-var detectedNewCronRegex = regexp.MustCompile(`hostname cron\[\d+\]: \((\w+\)) cmd \((\.*)\)`)
+var detectedNewCronRegex = regexp.MustCompile(`cron\[\d+\]: \((\w+)\) cmd \((.*)\)`)
 
 func MonitorCronJob(alerts chan<- string) error {
 	muCron.Lock()
@@ -29,20 +30,17 @@ func MonitorCronJob(alerts chan<- string) error {
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
 		line = strings.ToLower(line)
 		if strings.Contains(line, "cron") {
-			var username string
-			var jobs string
-			user := &username
-			job := &jobs
 			matches := detectedNewCronRegex.FindStringSubmatch(line)
 			if len(matches) > 2 {
-				*user = matches[1]
-				*job = matches[2]
-				msg := fmt.Sprintf("[!] User '%s' creating new job: '%s'", *user, *job)
+				username := matches[1]
+				jobs := matches[2]
+				msg := fmt.Sprintf("[!] User '%s' creating new job: '%s'", username, jobs)
 				alerts <- msg
 				alert.SendSSHServiceAlert(line, msg, "cron_added", "medium")
 			}
