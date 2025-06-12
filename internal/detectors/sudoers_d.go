@@ -32,13 +32,13 @@ func MonitorSudoersD(alerts chan<- string) error {
 				if _, ok := sudoersDState[file]; !ok {
 					alerts <- "[!] New sudoers file: " + file
 					msg := "New sudoers file created"
-					alert.SendSSHServiceAlert(file, msg, "added_sudoers_files", "high")
+					alert.SendServiceAlert(file, msg, "added_sudoers_files", "high")
 				}
 
 				if oldTime, ok := sudoersDState[file]; ok && !current[file].Equal(oldTime) {
 					alerts <- "[!] Modified sudoers file: " + file
 					msg := "Sudoers file modified"
-					alert.SendSSHServiceAlert(file, msg, "modified_sudoers_file", "high")
+					alert.SendServiceAlert(file, msg, "modified_sudoers_file", "high")
 				}
 			}
 
@@ -48,7 +48,7 @@ func MonitorSudoersD(alerts chan<- string) error {
 			if _, ok := current[oldFile]; !ok {
 				alerts <- "[!] Deleted sudoers file: " + oldFile
 				msg := "Sudoers file deleted"
-				alert.SendSSHServiceAlert(oldFile, msg, "modified_sudoers_file", "high")
+				alert.SendServiceAlert(oldFile, msg, "modified_sudoers_file", "high")
 			}
 		}
 

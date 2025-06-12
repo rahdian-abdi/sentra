@@ -28,7 +28,7 @@ func SetAlertURL(url string) {
 	alertURL = url
 }
 
-func SendSSHServiceAlert(log string, description string, alert_type string, severity string) {
+func SendServiceAlert(log string, description string, alert_type string, severity string) {
 	hostname, _ := os.Hostname()
 
 	alert := Alert{

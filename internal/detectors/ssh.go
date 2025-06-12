@@ -78,7 +78,7 @@ func handleFailedAttempt(ip string, line string, alerts chan<- string) {
 		info.count++
 		if info.count >= bruteForceThreshold {
 			msg := fmt.Sprintf("SSH brute force detected from IP: %s with %d failed attempts", ip, info.count)
-			alert.SendSSHServiceAlert(line, msg, "brute_force_attempt", "high")
+			alert.SendServiceAlert(line, msg, "brute_force_attempt", "high")
 			alerts <- msg
 			delete(attempts, ip)
 		}
@@ -91,11 +91,11 @@ func handleSuccessLogin(username string, ip string, line string, alerts chan<- s
 
 	if _, exists := knownIPs[ip]; !exists {
 		alertMsg := fmt.Sprintf("New successful SSH login from IP %s (user: %s) at %s", ip, username, time.Now().Format(time.RFC3339))
-		alert.SendSSHServiceAlert(line, alertMsg, "success_login", "high")
+		alert.SendServiceAlert(line, alertMsg, "success_login", "high")
 		alerts <- alertMsg
 	} else {
 		alertMsg := fmt.Sprintf("Repeated successful login from known IP %s (user: %s)", ip, username)
-		alert.SendSSHServiceAlert(line, alertMsg, "repeated_success_login", "low")
+		alert.SendServiceAlert(line, alertMsg, "repeated_success_login", "low")
 		alerts <- alertMsg
 	}
 }

@@ -71,6 +71,14 @@ func main() {
 		}
 	}()
 
+	go func() {
+		err := detectors.MonitorUserCron(alerts)
+		fmt.Println("Error: ", err)
+		if err != nil {
+			log.Fatal()
+		}
+	}()
+
 	for alerting := range alerts {
 		log.Println("[ALERT]", alerting)
 

@@ -45,14 +45,14 @@ func MonitorUserPrivilege(alerts chan<- string) error {
 			}
 			msg := "[!] New user creation detected: " + username
 			alerts <- msg
-			alert.SendSSHServiceAlert(line, msg, "user_creation", "high")
+			alert.SendServiceAlert(line, msg, "user_creation", "high")
 
 		}
 
 		if strings.Contains(line, "usermod") || strings.Contains(line, "gpasswd") && (strings.Contains(line, "sudo") || strings.Contains(line, "root")) {
 			msg := "[!] User granted sudo/root privileges: " + line
 			alerts <- msg
-			alert.SendSSHServiceAlert(line, msg, "user_privilege_escalation", "high")
+			alert.SendServiceAlert(line, msg, "user_privilege_escalation", "high")
 		}
 	}
 }

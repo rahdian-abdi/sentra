@@ -45,7 +45,7 @@ func MonitorSUElevation(alerts chan<- string) error {
 				userFrom := matches[2]
 				msg := fmt.Sprintf("[!] User '%s' attempted to switch to '%s' using su", userFrom, userTo)
 				alerts <- msg
-				alert.SendSSHServiceAlert(line, msg, "user_elevation", "medium")
+				alert.SendServiceAlert(line, msg, "user_elevation", "medium")
 			}
 		}
 
